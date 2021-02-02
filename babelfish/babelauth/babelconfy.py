@@ -1,6 +1,6 @@
 from pathlib import Path
 from os import environ
-from babelfish.babelfish.babelio import BabelFiler
+from ..babelio.babelfiler import BabelFiler
 
 
 # Global Variable
