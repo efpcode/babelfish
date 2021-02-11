@@ -28,11 +28,16 @@ class BabelFiler:
     @staticmethod
     def babel_mkfile(new_file: str = "untitled", suffix=".txt",
                      exist_ok=False) -> object:
+        new_file = str(new_file)
 
-        if not (str(new_file).count(".")):
-            new_file = "".join([str(new_file), suffix])
+        if new_file.count("."):
+            new_file, *rm_string = new_file.rsplit(".", maxsplit=new_file.count("."))
 
-        babel_filename = BabelFiler.BABELHOME / new_file
+        file_name = "".join([new_file, suffix])
+
+        babel_filename = BabelFiler.BABELHOME / file_name
+        print(f"New file was created at: {babel_filename.parent}, filename: "
+              f"{babel_filename.name}")
 
         return babel_filename.touch(exist_ok=exist_ok)
 
