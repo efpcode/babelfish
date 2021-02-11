@@ -21,7 +21,7 @@ the same can be accomplished by db module in a database.
 
 ## If I have time :hourglass: 
 * BabelDB._width_calculator : needs to be rewritten, since column width
-	is not constant resulting in on even lines :screams:!Code will be
+	is not constant resulting in on even lines :scream:!Code will be
 	changed to be more dynamic by: get longest word (in characters) for
 	each column and then add spacer. 
 
