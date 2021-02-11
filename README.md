@@ -23,7 +23,7 @@ is to showcase some basic knowledge about:
 
 
 # Daily Updates
-To do lists and code commentary will be published in 'BabelDevJournal.md'.
+To do lists and code commentary will be published in ['BabelDevJournal.md'](https://github.com/efpcode/babelfish/blob/babelDev/BabelDevJournal.md).
 
 Thanks for the read!
 
