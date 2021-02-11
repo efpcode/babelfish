@@ -1,6 +1,6 @@
 # babelfish
 ## Python side project Translator 
-### status: active development :fire:. 
+### Version: 0 status: active development :fire:. 
 
 ## Quick word about the 'babelfish' project.
 The aim of the project is to create a minimal viable translator. This
@@ -19,13 +19,13 @@ is to showcase some basic knowledge about:
 ### Version 2.0
 * Move local DB to server, use Heroku as host and change db manager
 	from sqlite3 to postgresql
-* Web 'appify' project.
+* Web 'appify' project use Flask
 
 
 # Daily Updates
 To do lists and code commentary will be published in 'BabelDevJournal.md'.
 
-Thanks for the read
+Thanks for the read!
 
 _efpcode_
 
