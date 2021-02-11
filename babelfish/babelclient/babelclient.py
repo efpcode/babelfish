@@ -6,7 +6,7 @@ from sys import getsizeof
 
 class BabelClient:
     def __str__(self):
-        return "BabelClient.APICaller"
+        return "BabelClient2.APICaller"
 
     def __repr__(self):
         return "BabelClient.Response[GET]"
