@@ -17,7 +17,7 @@ the same can be accomplished by db module in a database.
 * Response-parser from client i.e. get translation out of json-object. 
 * Create validation of username and password. Maybe use a namedtuple
 	from 'collections' :thinking:. 
-* DB schema for language code. 
+* DB schema for language codes. 
 
 ## If I have time :hourglass: 
 * BabelDB._width_calculator : needs to be rewritten, since column width
@@ -26,3 +26,29 @@ the same can be accomplished by db module in a database.
 	each column and then add spacer. 
 
 #### thanks for the read.
+
+
+# No parsing today :flushed:
+## Date: 2021-Feb-12
+
+## Todo List
+* json to sql schema this is needed for languages registry. 
+* Need to work on a better parser for language codes. Too many
+	for-loops, too costly and ugly :see_no_evil: 
+* Documentation of code base needs to go up!
+* Test implementation needs be more prioritized. Always try to keep your
+	technical debt low. 
+
+## What was accomplished :metal:
+* Crushed a :bug: in class BabelBD.db_connect property, 
+	code base failed at lines 75 - 77 because table was missing.
+* Added a new module called 'babellancode.py', this will be dependent on
+	classes BabelClient.api_get_response and whatever I call the table
+	creation method in class BabelDB.method for language code.
+
+## Unforeseen event :bomb:!
+* Pycharm virtual environment stopped working after updating macports.
+	Haven't figured out why, yet! 
+
+#### thanks for the read!
+
