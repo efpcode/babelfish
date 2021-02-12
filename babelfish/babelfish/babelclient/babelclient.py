@@ -1,6 +1,7 @@
 import os
 from requests import request
 from json import JSONDecoder as JsD
+from json import JSONDecodeError
 from sys import getsizeof
 
 
@@ -15,11 +16,17 @@ class BabelClient:
     def api_get_response(cls, url: str = None) -> object:
         j_object = JsD()
         response = request("GET", url=url)
-        parse_response = {
+        try:
+            parse_response = {
 
-            k: v for k, v in j_object.decode(response.text).items() if k in (
-                "responseDetails", "translatedText", "responseStatus", "key")
-        }
+                k: v for k, v in j_object.decode(response.text).items() if
+            k in ("responseDetails", "translatedText", "responseStatus",
+                  "key")
+            }
+
+        except JSONDecodeError:
+            return response
+
 
         # Exit for api token
         if "key" in parse_response.keys():
@@ -79,3 +86,6 @@ class BabelClient:
     @staticmethod
     def _str_to_bytes(text: str = None) -> int:
         return getsizeof(text.encode("utf-8", errors="replace"))
+
+
+

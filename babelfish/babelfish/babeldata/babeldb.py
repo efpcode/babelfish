@@ -73,6 +73,7 @@ class BabelDB:
             cursor = conn.cursor()
 
             try:
+                self._create_userdata_table()
                 cursor.execute("SELECT * FROM user_data")
                 cursor.fetchone()
 
@@ -90,13 +91,14 @@ class BabelDB:
             print("closing connection")
             self.db_connect.close()
             self.db_connect = False
+            return "Connection to db closed."
         return "No db connection was found!"
 
-    def __create_userdata_table(self):
-        conn = self.db_connect
+    def _create_userdata_table(self):
+        conn = connect(self.db_name)
         cursor = conn.cursor()
         cursor.execute(
-            '''Create TABLE user_data
+            '''CREATE TABLE IF NOT EXISTS user_data
             (user_id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL, 
             email TEXT NOT NULL,
