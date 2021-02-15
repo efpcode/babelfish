@@ -52,3 +52,13 @@ the same can be accomplished by db module in a database.
 
 #### thanks for the read!
 
+# All your builds :hammer: are belong to us! 
+### Date: 2021-02-15
+Hello again,
+I need to confess that I have not code today on the project
+:astonished:. The reason new IKEA furniture needs to assembled.
+
+#### thanks for the read and cya again on 19-feb.
+
+
+
