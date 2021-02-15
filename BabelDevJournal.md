@@ -56,7 +56,7 @@ the same can be accomplished by db module in a database.
 ### Date: 2021-02-15
 Hello again,
 I need to confess that I have not code today on the project
-:astonished:. The reason new IKEA furniture needs to assembled.
+:astonished:. The reason new IKEA furniture needs to be assembled.
 
 #### thanks for the read and cya again on 19-feb.
 
