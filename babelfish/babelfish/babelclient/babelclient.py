@@ -17,6 +17,11 @@ class BabelClient:
         j_object = JsD()
         response = request("GET", url=url)
         try:
+            assert len(response.content) > 0, "Connection or other issue."
+        except AssertionError as error:
+            print(error)
+            return False
+        try:
             parse_response = {
 
                 k: v for k, v in j_object.decode(response.text).items() if

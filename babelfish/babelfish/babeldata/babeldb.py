@@ -3,6 +3,9 @@ from pathlib import Path
 from typing import List, Generator
 from ..babelio.babelfiler import BabelFiler
 from distutils.util import strtobool
+from random import choices, randint
+from string import ascii_letters
+from collections import defaultdict
 """
 TODO Lists
 * Create table method
@@ -112,14 +115,10 @@ class BabelDB:
         conn = self.db_connect
         cursor = conn.cursor()
         put_data = data
+        print(data)
         cursor.executemany(
             'INSERT INTO user_data(username, email, password, salt) VALUES ('
-            '?, '
-            '?, '
-            '?, '
-            '?)',
-            put_data
-        )
+            ' ?, ?, ?, ?)',  put_data)
         conn.commit()
         return conn
 
@@ -129,48 +128,71 @@ class BabelDB:
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM user_data')
         headers = [i[0] for i in cursor.description]
-        col_names = BabelDB.parse_table(lines=headers, columnwidth=col_w)
+        col_names = BabelDB.parse_table(table_data=headers,
+                                        columnwidth=col_w, sep="#")
         cursor.execute('SELECT * FROM user_data')
-        print("".join(col_names))
-        for i in cursor.fetchall():
-            row = BabelDB.parse_table(i, columnwidth=col_w)
-            print("".join(row))
+        print(col_names)
+        data = cursor.fetchall()
+        for i, v in enumerate(data, start=1):
+            row = BabelDB.parse_table(table_data=v, columnwidth=col_w)
+            if i <= 5:
+                print(row)
+            else:
+                break
+
         return "Done!"
 
     @staticmethod
-    def parse_table(lines, columnwidth: int = 24, sep: str = "|") -> \
-            Generator[str, None, None]:
-        chr_space = [
-            BabelDB._width_calculator(str(i), column_width=columnwidth) for
-            i in lines
-        ]
-        yield "".join([f"{chr_space[i] * ' '}{v}{chr_space[i] * ' '}"
-                       f"{sep}" for i, v in enumerate(lines)])
+    def mock_data():
+        tmp_list = list()
+        while True:
+            sample = "".join(choices(ascii_letters, k=randint(1, 11)))
+            tmp_list.append(sample)
+            if len(tmp_list) == 4:
+                break
+        return tuple(tmp_list)
+
+    @staticmethod
+    def create_mockdata():
+        user_data = list()
+        for i in range(0, 11):
+            sample = BabelDB.mock_data()
+            user_data.append(sample)
+        return user_data
+
+    @staticmethod
+    def parse_table(table_data, columnwidth, sep: str = "|"):
+        table = defaultdict(str)
+        for i, rows in enumerate(table_data):
+            cell = BabelDB._width_calculator(rows, column_width=columnwidth,
+                                             sep=sep)
+            table[i] += "".join(list(cell))
+        return "".join([table.get(k) for k in table.keys()])
 
     @staticmethod
     def _width_calculator(
-            word: str, column_width: int = 24, spacer: int = 2
-    ) -> int:
+            word: str, column_width: int = 24, spacer: int = 2, sep: str = "|"
+    ) -> Generator[str, None, None]:
+
+        word = str(word)
+
+        if len(word) >= column_width:
+            word = word[(spacer*4*-1):]
+
         if len(word) % 2:
             word = "".join([word, " "])
 
         try:
-            width_factor = int(
-                (abs(column_width/2 - (len(word) + spacer)))*0.5
-            )
-            assert(width_factor >= 0)
-        except AssertionError:
-            print("Setting default width factor: 5 character\n")
-            width_factor = 5
-            return width_factor
+            assert isinstance(word, str)
+            empty_space = int(((column_width - (spacer * 2)) - len(word)) *
+                              0.5)
+            assert(empty_space >= 0)
 
-        except TypeError as error:
-            print("Could not complete calculation please make sure that "
-                  "inputs are of the correct type [int, str, int] -> "
-                  f"was set to width factor: 5 \n{error}: "
-                  f"{column_width, word, spacer}")
-            width_factor = 5
-            return width_factor
+        except (AssertionError, TypeError):
+            print("Setting default width factor to: 2 character\n")
+            width_factor = 2
+            word = f"{word}"
+            yield f"{width_factor * ' '}{word}{width_factor * ' '}{sep}"
 
         else:
-            return width_factor
+            yield f"{empty_space *' '}{word}{empty_space * ' '}{sep}"
