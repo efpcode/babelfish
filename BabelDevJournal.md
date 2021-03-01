@@ -60,5 +60,51 @@ I need to confess that I have not code today on the project
 
 #### thanks for the read and cya again on 19-feb.
 
+## Guess who back!:grimacing:
+### 2021-March-01 
+Hello Babeler,
+Latest confession, I've been parsing strings and making life difficult,
+also crushed some bugs.
 
+## What was accomplished :star: !
+1. Assembled a ton of Ikea furniture, also snapped a bolt in half something
+   about me and concrete don't get all long :grin:!
 
+2. Created a parser for language registry that converts a encoded utf8
+   response to Json object. 
+
+3. Created mockdata method for dev reasons in babeldb.py
+
+4. 'Finished' pptable method or at least now column width is constant as
+   it should.
+
+5. Learned more about defaultdict from collections module.
+
+6. BabelFiler class got two new static methods called 'create_json'and 'read_json' (see babelfiler.py)
+
+## What could be improved :see_no_evil: .
+* The parser converter in babellangcode.py it's far from optimal a
+	double nested for-loop is never a good answer or memory efficient.
+	Need to see if there's an algorithm for parsing. Or something in the
+	itertools module that could do this smarter. 
+
+* The BabelDB.pptable is not optimal right now, SQL-querry does a fetchall (yet
+	another snail), which will kill memory if the db becomes
+	big. The code there is not scalable, but I think we can fix this
+	with OFFSET and little math, question the internet about it. 
+
+## What's in the pipeline :wrench: .
+* Convert Json-object to SQL, either by generator or go the easy route
+	of adding a new dependency with Pandas.
+
+* Create db.get_value or db.get_cells, a getter method.
+* Create db.update or db.setcell, a setter method.
+
+* Creating a user login data validator and hasher. I will use 're'
+	module to do a re.fullmatch for input of user and hashed data from
+	db. 
+
+* Plan for CLI, this is the tricky part need to visualize the
+	interaction, before coding that part. 
+
+#### thanks for the read!
