@@ -108,3 +108,42 @@ also crushed some bugs.
 	interaction, before coding that part. 
 
 #### thanks for the read!
+
+# Two for one!:grimacing:
+### 2021-March-07 
+Hello again, 
+the week has been kind of rough.. but some bugs were found and killed
+(hopefully!).
+
+I decided to create my own json to sql route, this might give some
+valuable insights. 
+
+## What was accomplished :star: !
+1. BabelLangCode class had a minor update to the lang_columns
+   property, the idea was to have an easy why to get all the unique
+   columns found in the Json object. So to make sure of that I used a
+   set data structure which by default removes duplicates.
+
+2. BabelLangCode._str_parser was updated to catch a very special case.
+   Line that contain an extra colon mid sentence. 
+
+3. New methods added to BabelDB: json\_to\_tuples conversion from Json object to 
+tuple so insertion of data with SQLite3 is working, create\_langcode\_table 
+creates schema for langcode table, jsondata\_filtered filters with the Type 
+field set to 'language'.
+
+## What could be improved :see_no_evil: .
+* Need to get more coding in my life.
+* Need to add Kanban board (trello, or other system).
+* Need to ask the python-community about repeating yourself, when
+	dealing with creation of table to uphold parameterization and avoid
+	sql injections. 
+* Need to test more!
+
+
+## What's in the pipeline :wrench: .
+* Continue with BabelDB todo list: get data, update value, delete value
+	and lastly rollback.
+* Code for password hasher
+* Ask the community about do not repeat issue. 
+#### thanks for the read!

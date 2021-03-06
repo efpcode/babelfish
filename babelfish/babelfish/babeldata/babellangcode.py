@@ -1,12 +1,12 @@
-from typing import Iterator, Union, Any, DefaultDict
+from typing import Iterator, Union, Any, DefaultDict, Sized
 from collections import defaultdict
 from babelfish.babelfish.babelclient.babelclient import BabelClient
 from babelfish.babelfish.babelio.babelfiler import BabelFiler
-
+from itertools import chain
 
 
 class BabelLangCode:
-    LANG_REGISTRARY_URL:str = \
+    LANG_REGISTRARY_URL: str = \
         "https://www.iana.org/assignments/language-subtag-registry/language" \
         "-subtag-registry"
 
@@ -19,14 +19,15 @@ class BabelLangCode:
         return self._lang_code
 
     @lang_code.setter
-    def lang_code(self, url: str = lang_codes):
+    def lang_code(self, url: str = None):
         self._lang_code = url
 
     @property
     def lang_columns(self) -> dict:
         return self._lang_columns
+    
     @lang_columns.setter
-    def lang_columns(self, json_like_dict: dict =None) -> None:
+    def lang_columns(self, json_like_dict: dict = None) -> None:
         try:
             assert isinstance(json_like_dict, dict), "Input for columns " \
                                                      "must be a " \
@@ -35,21 +36,14 @@ class BabelLangCode:
             print(error)
             self._lang_columns = None
 
-
         else:
-            keys = max(
-                [json_like_dict.get(i).keys() for i in json_like_dict],
-                key=len
-            )
-            columns =list(keys)
-            columns.insert(0,"Index")
+            all_keys =(json_like_dict.get(i).keys() for i in json_like_dict)
+            columns = list(set(chain.from_iterable(all_keys)))
+            columns = sorted(columns)
+            columns.insert(0, "Index")
             t_columns = tuple(columns)
             d_columns = dict.fromkeys(t_columns)
             self._lang_columns = d_columns
-
-
-
-
 
     def get_langcode_response(self) -> object:
         return BabelClient.api_get_response(url=self.lang_code)
@@ -86,6 +80,12 @@ class BabelLangCode:
                     if not b:
                         b = a
                         a = "Comments"
+
+                    # Special case line with : between sentences.
+                    if "phonemes" in a:
+                        special_case = [a, b]
+                        a = "Comments"
+                        b = "".join(special_case)
                     tmp_list.append([i, {a.strip(): b.strip()}])
         return tmp_list
 
@@ -105,11 +105,10 @@ class BabelLangCode:
         return d_json
 
     @staticmethod
-    def from_str_to_ordered_dict(language_codes: Iterator[str]) -> \
+    def from_str_to_dict(language_codes: Iterator[str]) -> \
             Union[str, DefaultDict[Any, list]]:
 
-        """
-
+        """Function parses response from LANG_REGISTRARY_URL to dictionary.
         """
 
         try:
