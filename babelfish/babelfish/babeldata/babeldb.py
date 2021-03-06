@@ -1,11 +1,13 @@
 from sqlite3 import connect, OperationalError, ProgrammingError
 from pathlib import Path
-from typing import List, Generator
+from typing import List, Generator, Tuple
 from ..babelio.babelfiler import BabelFiler
 from distutils.util import strtobool
 from random import choices, randint
 from string import ascii_letters
 from collections import defaultdict
+from re import compile
+from ..babeldata.babellangcode import BabelLangCode
 """
 TODO Lists
 * Create table method
@@ -66,7 +68,7 @@ class BabelDB:
                 break
 
     @property
-    def db_connect(self):
+    def db_connect(self) -> bool:
         return self._db_connect
 
     @db_connect.setter
@@ -89,7 +91,7 @@ class BabelDB:
         else:
             self._db_connect = False
 
-    def db_close(self):
+    def db_close(self) -> str:
         if self.db_connect:
             print("closing connection")
             self.db_connect.close()
@@ -111,6 +113,58 @@ class BabelDB:
         conn.commit()
         conn.close()
 
+    def _create_langcode_table(self):
+        conn = connect(self.db_name)
+        cursor = conn.cursor()
+        cursor.execute('''CREATE TABLE IF NOT EXISTS lang_codes 
+        (lang_id INTEGER PRIMARY KEY NOT NULL,
+        date DATE NOT NULL,
+        comments VARCHAR(80),
+        deprecated DATE,
+        description TEXT,
+        macrolanguage VARCHAR(80),
+        preferred_value VARCHAR(40),
+        prefix VARCHAR(20),
+        scope VARCHAR(24),
+        subtag VARCHAR(24),
+        suppress_script VARCHAR(50),
+        tag VARCHAR(40),
+        type VARCHAR(60)         
+        )''')
+        conn.commit()
+        conn.close()
+
+    def _json_to_tuples(self, json_obj: dict) -> list:
+        values = list()
+        langcode_obj = BabelLangCode()
+        langcode_obj.lang_columns = json_obj
+        d1 = langcode_obj.lang_columns.copy()
+        json_obj = self._jsondata_filtered(json_obj=json_obj)
+
+        for i, v in enumerate(json_obj):
+            d1.update({"Index": i})
+            d1.update(v)
+            values.append(tuple(d1.values()))
+            d1 = langcode_obj.lang_columns.copy()
+        return values
+
+    def _jsondata_filtered(self, json_obj: dict) -> Generator[dict, None,
+                                                               None]:
+        return (json_obj.get(i) for i in json_obj if json_obj[i]["Type"] ==
+                "language")
+
+    def db_insert_langcode_data(self, json_obj):
+        values = self._json_to_tuples(json_obj=json_obj)
+        conn = self.db_connect
+        cursor = conn.cursor()
+        cursor.executemany('''INSERT INTO lang_codes(
+        lang_id, date, comments, deprecated,
+        description, macrolanguage, preferred_value, prefix,
+        scope, subtag, suppress_script, tag, type) VALUES
+        (?,?,?,?,?,?,?,?,?,?,?,?,?)''', values)
+        conn.commit()
+        return conn
+
     def db_userdata_insert(self, data: List[tuple] = None) -> object:
         conn = self.db_connect
         cursor = conn.cursor()
@@ -122,12 +176,41 @@ class BabelDB:
         conn.commit()
         return conn
 
+    def db_get_userdata(self, col_row: Tuple[str, str]) -> str:
+        """Method returns a single row from a column in user_data table.
+        Parameters
+        ----------
+        col_row : (column header: str, row label: str)
+        """
+
+        conn = self.db_connect
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT * FROM user_data")
+        pattern = compile(col_row[0])
+        cond = self._get_column_labels(cursor, target=pattern)
+        if not cond:
+            return 'Column header was not found!'
+
+        cursor.execute(f"SELECT * FROM user_data WHERE {col_row[0]} = ?",
+                       (col_row[1]))
+        data = cursor.fetchall()
+        return data
+
+    def _get_column_labels(self, cursor: object, target: str = None) -> list:
+        if not target:
+            return [i for i in map(lambda x: x[0], cursor.description) if i]
+        else:
+            pattern = compile(target)
+            return [i for i in map(lambda x:x[0], cursor.description) if
+                    pattern.fullmatch(i)]
+
+
     def pptable(self, column_width: int = 24) -> str:
         conn = self.db_connect
         col_w = column_width
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM user_data')
-        headers = [i[0] for i in cursor.description]
+        headers = self._get_column_labels(cursor,)
         col_names = BabelDB.parse_table(table_data=headers,
                                         columnwidth=col_w, sep="#")
         cursor.execute('SELECT * FROM user_data')
@@ -166,7 +249,7 @@ class BabelDB:
         for i, rows in enumerate(table_data):
             cell = BabelDB._width_calculator(rows, column_width=columnwidth,
                                              sep=sep)
-            table[i] += "".join(list(cell))
+            table[i] = "".join([table[i], "".join(list(cell))])
         return "".join([table.get(k) for k in table.keys()])
 
     @staticmethod
@@ -176,7 +259,7 @@ class BabelDB:
 
         word = str(word)
 
-        if len(word) >= column_width:
+        if column_width <= len(word):
             word = word[(spacer*4*-1):]
 
         if len(word) % 2:

@@ -43,7 +43,6 @@ class BabelFiler:
 
         return babel_filename.touch(exist_ok=exist_ok)
 
-# Static Method
     @staticmethod
     def babel_fileopen(path_to_file: str = ""):
         path_object = Path(path_to_file)
