@@ -25,6 +25,10 @@ is to showcase some basic knowledge about:
 # Daily Updates
 To do lists and code commentary will be published in ['BabelDevJournal.md'](https://github.com/efpcode/babelfish/blob/babelDev/BabelDevJournal.md).
 
+# Kanban board.
+Please visit this [kanban board](https://trello.com/b/HcC44A6F/babelfish).
+***Kanban updates*** are done on Mondays, after :coffee:.
+
 Thanks for the read!
 
 _efpcode_
