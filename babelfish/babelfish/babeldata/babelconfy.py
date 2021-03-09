@@ -47,7 +47,7 @@ class BabelCredentials:
                "MY_PASSWORD:secrete_password})"
 
     def __str__(self):
-        return "BabelCredential object has your username & password"
+        return "BabelCredential object has your username & data"
 
     def _io_exists__(self):
         return self.HOME.exists()
@@ -76,12 +76,12 @@ class BabelCredentials:
             try:
                 if not (cond1 and cond2):
                     raise TypeError(f"Expected usr_name:{type(usr_name)} and "
-                                    f"password {type(password)} to be "
+                                    f"data {type(password)} to be "
                                     f"string typed inputs.")
             except TypeError as error:
                 print(error)
                 usr_name = input("Enter a valid username: ")
-                password = input("Enter your password: ")
+                password = input("Enter your data: ")
                 continue
             else:
                 self.__babel_user = usr_name

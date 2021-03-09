@@ -1,6 +1,7 @@
 from sqlite3 import connect, OperationalError, ProgrammingError
+from sqlite3 import Connection, Cursor
 from pathlib import Path
-from typing import List, Generator, Tuple
+from typing import List, Generator, Tuple, Any, Union, Pattern
 from ..babelio.babelfiler import BabelFiler
 from distutils.util import strtobool
 from random import choices, randint
@@ -27,10 +28,11 @@ class BabelDB:
         self.db_connect = db_connect
 
     def __repr__(self):
-        return f"BabelDB.dbMethods()"
+        return f"BabelDB('test', True)"
 
     def __str__(self):
-        return f"BabelDB.func([GET,POST,DELETE])"
+        return f"class BabelDB.Methods([GET, POST, DELETE, UPDATE]) Local " \
+               f"Database."
 
     @property
     def db_name(self):
@@ -68,7 +70,7 @@ class BabelDB:
                 break
 
     @property
-    def db_connect(self) -> bool:
+    def db_connect(self) -> Union[bool, Connection]:
         return self._db_connect
 
     @db_connect.setter
@@ -107,7 +109,7 @@ class BabelDB:
             (user_id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL, 
             email TEXT NOT NULL,
-            password BLOB NOT NULL, 
+            data BLOB NOT NULL, 
             salt BLOB NOT NULL)'''
         )
         conn.commit()
@@ -149,7 +151,7 @@ class BabelDB:
         return values
 
     def _jsondata_filtered(self, json_obj: dict) -> Generator[dict, None,
-                                                               None]:
+                                                              None]:
         return (json_obj.get(i) for i in json_obj if json_obj[i]["Type"] ==
                 "language")
 
@@ -171,12 +173,12 @@ class BabelDB:
         put_data = data
         print(data)
         cursor.executemany(
-            'INSERT INTO user_data(username, email, password, salt) VALUES ('
+            'INSERT INTO user_data(username, email, data, salt) VALUES ('
             ' ?, ?, ?, ?)',  put_data)
         conn.commit()
         return conn
 
-    def db_get_userdata(self, col_row: Tuple[str, str]) -> str:
+    def db_get_userdata(self, col_row: Tuple[str, str]) -> Tuple[Any, Any]:
         """Method returns a single row from a column in user_data table.
         Parameters
         ----------
@@ -189,21 +191,22 @@ class BabelDB:
         pattern = compile(col_row[0])
         cond = self._get_column_labels(cursor, target=pattern)
         if not cond:
-            return 'Column header was not found!'
+            return 'Column header was not found!', False
 
         cursor.execute(f"SELECT * FROM user_data WHERE {col_row[0]} = ?",
                        (col_row[1]))
         data = cursor.fetchall()
-        return data
+        return data, cursor
 
-    def _get_column_labels(self, cursor: object, target: str = None) -> list:
+    def _get_column_labels(self, cursor: Cursor, target: Pattern[str] = None) \
+            -> \
+            list:
         if not target:
             return [i for i in map(lambda x: x[0], cursor.description) if i]
         else:
             pattern = compile(target)
             return [i for i in map(lambda x:x[0], cursor.description) if
                     pattern.fullmatch(i)]
-
 
     def pptable(self, column_width: int = 24) -> str:
         conn = self.db_connect

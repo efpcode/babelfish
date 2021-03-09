@@ -23,15 +23,13 @@ class BabelClient:
             return False
         try:
             parse_response = {
-
                 k: v for k, v in j_object.decode(response.text).items() if
-            k in ("responseDetails", "translatedText", "responseStatus",
-                  "key")
+                k in ("responseDetails", "translatedText", "responseStatus",
+                      "key")
             }
 
         except JSONDecodeError:
             return response
-
 
         # Exit for api token
         if "key" in parse_response.keys():
@@ -91,6 +89,3 @@ class BabelClient:
     @staticmethod
     def _str_to_bytes(text: str = None) -> int:
         return getsizeof(text.encode("utf-8", errors="replace"))
-
-
-
