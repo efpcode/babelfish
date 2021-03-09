@@ -147,3 +147,58 @@ field set to 'language'.
 * Code for password hasher
 * Ask the community about do not repeat issue. 
 #### thanks for the read!
+
+# Added some 'hash':es to my code:grimacing:
+### 2021-March-09 
+## General Rambles of Mad hErmit.
+Hello Again, 
+Code is funny sometimes, you get the sense that a problem is rather easy
+until you actually try it out. This happened with my hash function for
+passwords, it was alienating and a bit daunting.
+
+First mistake was to pick good hash algorithm, apparently there's not
+only md5, sha256 and other letters scrabbled with digits. Turns out that
+the combination letters and digits had a purpose and the wrongly applied
+function could lead to an insecure mess.
+
+So surfed the web for an answer and found the argon2 module and hashlib.blake2b 
+function.
+
+Hypothesis: if hashing once is secure, hashing twice with different
+algorithm should be better?
+
+Interaction:
+User types passwords -> hashed in blake2b with salt of n=16 bytes ->
+hashed_result is then hashed again with argon2.
+
+Salt was created with the secretes.token_bytes function.
+
+Database will contain both salt, argon2 hashed password. 
+
+## Why hash twice? 
+First round hashing is to create a bit more entropy for bad passwords.
+Second round hashing is to create cost and security. Argon2 hashing was
+intended to be a bit costly for force brute attacks. Also, it was
+designed for the purpose of hashing passwords. 
+
+## BTW
+Added a Kanban board to the project [link](https://trello.com/b/HcC44A6F/babelfish)
+
+## What was accomplished :star: !
+* New module called babeluser with class UserData.
+* Minor fixes of hint typing and under and over indention code.
+* One, sick Kanban board.
+* Gain new respect for cryptography, (I thought a new something.)
+
+## What could be improved :see_no_evil: .
+* Validation model of user, it's half baked at the minute. 
+* General Documentation of classes.
+* Test coverage. 
+
+## What's in the pipeline :hammer:?
+* User Validation model.
+* (Maybe) an encryption of the other data in db like email, username
+	etc..
+* Think about command line interface.
+* Design UnitTest or add pytest to project.
+#### thanks for the read!
