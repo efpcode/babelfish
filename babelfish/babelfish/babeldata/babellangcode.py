@@ -1,4 +1,4 @@
-from typing import Iterator, Union, Any, DefaultDict, Sized
+from typing import Iterator, Union, Any, DefaultDict
 from collections import defaultdict
 from babelfish.babelfish.babelclient.babelclient import BabelClient
 from babelfish.babelfish.babelio.babelfiler import BabelFiler
@@ -37,7 +37,7 @@ class BabelLangCode:
             self._lang_columns = None
 
         else:
-            all_keys =(json_like_dict.get(i).keys() for i in json_like_dict)
+            all_keys = (json_like_dict.get(i).keys() for i in json_like_dict)
             columns = list(set(chain.from_iterable(all_keys)))
             columns = sorted(columns)
             columns.insert(0, "Index")
