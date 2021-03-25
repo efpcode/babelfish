@@ -205,7 +205,7 @@ Added a Kanban board to the project [link](https://trello.com/b/HcC44A6F/babelfi
 
 # Spring Break/Clean Code 
 ### 2021-March-25 
-## A tangled mess, simplified :raise_hands:!
+## A tangled mess, simplified :raised_hands: !
 Hello there, 
 Ohh.. mee I've been working with something behind the curtain for some
 time now, hence my hiatus in git commits and blog post updates.
