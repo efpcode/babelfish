@@ -188,7 +188,7 @@ Added a Kanban board to the project [link](https://trello.com/b/HcC44A6F/babelfi
 * New module called babeluser with class UserData.
 * Minor fixes of hint typing and under and over indention code.
 * One, sick Kanban board.
-* Gain new respect for cryptography, (I thought a new something.)
+* Gain new respect for cryptography, (I thought a knew something.)
 
 ## What could be improved :see_no_evil: .
 * Validation model of user, it's half baked at the minute. 
@@ -202,3 +202,35 @@ Added a Kanban board to the project [link](https://trello.com/b/HcC44A6F/babelfi
 * Think about command line interface.
 * Design UnitTest or add pytest to project.
 #### thanks for the read!
+
+# Spring Break/Clean Code 
+### 2021-March-25 
+## A tangled mess, simplified :raise_hands:!
+Hello there, 
+Ohh.. mee I've been working with something behind the curtain for some
+time now, hence my hiatus in git commits and blog post updates.
+
+
+## What was accomplished :star: !
+* New UML model for the project.
+* A new branch in git titled DevRefactor
+* A simplification of project scope that removed the necessity of
+	hashing and storing user information.
+
+## What could be improved :see_no_evil: .
+* Over design is not good design, think simple and have a user centric
+	view about the project.
+* General Documentation of classes.
+* Test coverage. 
+
+## What's in the pipeline :hammer:?
+* Refactor the whole code base to reflect the new UML model.
+* Update UML if needed.
+* Think about command line interface.
+* Design UnitTest or add pytest to project.
+
+## BTW
+Added the new UML model of the project here in card '# New UML Model for Project' -> [link](https://trello.com/b/HcC44A6F/babelfish)
+
+#### thanks for the read!
+
