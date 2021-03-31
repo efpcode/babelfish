@@ -29,6 +29,14 @@ class BabelDB:
         return f"class BabelDB.Methods([GET]) from Local " \
                f"Database."
 
+    #  An attempt to disconnect properly if class is instantiate using with.
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type: type, db_connect, exc_tb):
+        return self.db_connect.close_connection()
+
+
     @property
     def db_name(self):
         return self._dbname
@@ -278,4 +286,6 @@ class ConnectDB(Connection):
 
     def close_connection(self):
         self.is_connected = False
+        cursor = super().cursor()
+        cursor.close()
         return super().close()
